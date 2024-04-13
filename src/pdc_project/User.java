@@ -8,7 +8,7 @@ package pdc_project;
  *
  * @author letmeplay
  */
-public class User {
+public abstract class User {
 
     private String username;
     private String password;
