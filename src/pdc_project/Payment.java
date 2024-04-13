@@ -6,8 +6,28 @@ package pdc_project;
 
 /**
  *
- * @author letmeplay
+ * @author Bubbltea
  */
 public class Payment {
-    
+    private double amount;
+    private String Status;
+
+    public Payment(double amount) {
+        this.amount = amount;
+        this.Status = "Pending";
+    }
+
+    // process the payment
+    public void processPayment() {
+        // add the code to process the payment.
+    }
+
+    // get&set methods
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
 }

@@ -6,8 +6,33 @@ package pdc_project;
 
 /**
  *
- * @author letmeplay
+ * @author Bubbltea
  */
 public class Discount {
-    
+    private String code;
+    private double percentage;
+    private boolean isActive;
+
+    public Discount(String code, double percentage) {
+        this.code = code;
+        this.percentage = percentage;
+        this.isActive = false;
+    }
+
+    // get&set methods
+    public String getCode() {
+        return code;
+    }
+
+    public double getPercentage() {
+        return percentage;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }
