@@ -8,6 +8,11 @@ package pdc_project;
  *
  * @author letmeplay
  */
-public class Admin {
+public class Admin extends User {
+
+    @Override
+    public boolean isAdmin() {
+        return true;
+    }
     
 }
