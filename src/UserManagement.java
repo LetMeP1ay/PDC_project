@@ -42,8 +42,8 @@
      public void saveUsersToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/Resources/Users.txt"))) {
             for (Customer customer : customers) {
-                writer.write(customer.getUsername() + "," +
-                             customer.getPassword() + "," +
+                writer.write(customer.getUsername() + ",gaspoweredwheelchair123908519283908563908asjkfgs9a780as908gh0sd" +
+                             customer.getPassword() + ",monkeyCyrus89001884844812394123748127349871d2j3s491k234al712934dn1m28s34" +
                              customer.getName() + "," +
                              customer.getEmail() + "," +
                              customer.getAddress() + "," +

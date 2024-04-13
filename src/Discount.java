@@ -16,8 +16,8 @@ public class Discount {
 
     public Discount(String code, double percentage) {
         this.code = "DISCOUNT";
-        this.percentage = percentage;
-        this.isActive = false;
+        this.percentage = 0.1;
+        this.isActive = true;
     }
 
     // get&set methods

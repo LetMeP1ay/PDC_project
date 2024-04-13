@@ -44,11 +44,15 @@ public class OnlineShoppingSystem {
             System.out.println("2. Create Account");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume the newline left-over
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    // Rest of the case...
+                    System.out.print("Username: ");
+                    String username = scanner.nextLine();
+                    System.out.print("Password: ");
+                    String password = scanner.nextLine();
+                    
                     break;
                 case 2:
                     System.out.println("Please enter the following information to create an account:");
