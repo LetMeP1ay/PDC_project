@@ -57,7 +57,8 @@ public class Customer extends User{
     public void setReviews(String reviews) {
         this.reviews = reviews;
     } */
-
+    
+    @Override
     public boolean isAdmin() {
         return false;
     }
