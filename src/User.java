@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -19,7 +21,7 @@ public abstract class User {
         this.username = username;
         this.password = password;
         this.name = name;
-        this.email = email;
+        setEmail(email);
     }
 
     public String getUsername() {
@@ -42,7 +44,7 @@ public abstract class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+       this.email = isValidEmail(email) ? email : null;
     }
 
     public String getPassword() {
@@ -55,6 +57,13 @@ public abstract class User {
 
     public boolean authenticate(String password) {
         return this.password.equals(password);
+    }
+
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     public abstract boolean isAdmin();

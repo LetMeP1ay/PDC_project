@@ -40,7 +40,7 @@
      }
  
      public void saveUsersToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./Resources/Users.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/Resources/Users.txt"))) {
             for (Customer customer : customers) {
                 writer.write(customer.getUsername() + "," +
                              customer.getPassword() + "," +

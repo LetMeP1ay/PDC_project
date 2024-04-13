@@ -11,16 +11,23 @@
 
 public class Payment {
     private double amount;
-    private String Status;
+    private String status;
 
     public Payment(double amount) {
         this.amount = amount;
-        this.Status = "Pending";
+        this.status = "Pending";
     }
 
     // process the payment
-    public void processPayment() {
-        // add the code to process the payment.
+    public boolean processPayment(Customer customer) {
+        if (customer.getBalance() >= amount) {
+            customer.setBalance(customer.getBalance() - amount);
+            this.status = "Paid";
+            return true;
+        } else {
+            this.status = "Failed";
+            return false;
+        }
     }
 
     // get&set methods
@@ -29,6 +36,6 @@ public class Payment {
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 }
