@@ -18,10 +18,10 @@ public class Payment {
         this.status = "Pending";
     }
 
-    // process the payment
+    // process the users payment, checking if there is enough balance available for the transaction
     public boolean processPayment(Customer customer) {
         if (customer.getBalance() >= amount) {
-            customer.setBalance(customer.getBalance() - amount);
+            customer.changeBalance(amount);
             this.status = "Paid";
             return true;
         } else {

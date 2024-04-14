@@ -14,7 +14,7 @@ public class Discount {
     private double percentage;
     private boolean isActive;
 
-    public Discount(String code, double percentage) {
+    public Discount() {
         this.code = "DISCOUNT";
         this.percentage = 0.1;
         this.isActive = true;
@@ -29,20 +29,27 @@ public class Discount {
         return percentage;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
-
-    public void setActive(User user, boolean active) {
-        if (user.isAdmin()) {
-            isActive = active;
-            System.out.println("Discount changed successfully.");
+// Retrieve the status of the current discount based on the isActive variable.
+    public String retrieveStatus() {
+        if (isActive) {
+            return "Your discount is currently active.";
         }
         else {
-            System.out.println("Access denied. Only admin users can change the state of discount.");
+            return "Your discount is currently disabled.";
         }
     }
-
+// Toggle the discount
+    public void changeActive() {
+        isActive = !isActive;
+        if (isActive) {
+            System.out.println("The discount is now active.");
+        } else {
+            System.out.println("The discount is now disabled.");
+        }
+    }
     @Override
     public String toString() {
         return code + "," + percentage + "," + isActive;

@@ -4,6 +4,10 @@
  */
 
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,15 +18,18 @@ public class Order {
 
     private UUID orderId;
     private Customer customer;
-   // private List<Product> products;
+    private List<Product> products;
     private Payment payment;
     private String status;
 
-    public Order(Customer customer) {
+    // constructor
+    public Order(Customer customer, Payment payment) {
         this.customer = customer;
         this.orderId = UUID.randomUUID();
+        this.payment = payment;
     }
 
+    // get&set methods
     public UUID getOrderId() {
         return orderId;
     }
@@ -35,9 +42,13 @@ public class Order {
         this.customer = customer;
     }
 
-    /* public List<Proudct> getProducts() {
+    public List<Product> getProducts() {
         return this.products;
-    }*/
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
     public Payment getPayment() {
         return this.payment;
@@ -47,6 +58,7 @@ public class Order {
         return this.status;
     }
 
+    //set the current status of a payment for tracking of orders
     public void setStatus() {
         switch(payment.getStatus()) {
             case "Pending":
@@ -60,6 +72,23 @@ public class Order {
                 break;
         }
         
+    }
+
+    // save the order to a file in an easy to read format for admins and users to view
+    public void saveToFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("./src/Resources/Order.txt", true))) {
+            writer.println("Order ID: " + orderId);
+            writer.println("Customer: " + customer.getName());
+            writer.println("Products:");
+            for (Product product : products) {
+                writer.println("- " + product.getName() + ": " + product.getPrice());
+            }
+            writer.println("Total: " + payment.getAmount());
+            writer.println("Payment status: " + payment.getStatus());
+            writer.println();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the order.");
+        }
     }
     
 }

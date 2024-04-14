@@ -37,19 +37,19 @@ public class ShoppingCart {
 
     // apply a discount
     public void applyDiscount(Discount discount) {
-        if (discount.isActive()) {
+        if (discount.getIsActive()) {
             this.discount = discount;
         }
     }
 
-    // get the total price of the products in the cart
+    // get the total price of the products in the cart and apply the discount if there is one to the total
     public double calculateTotal() {
         double total = 0;
         for (Product product : products) {
             total += product.getPrice();
         }
         if (discount != null) {
-            total = total - total * discount.getPercentage(); // apply discount
+            total = total - total * discount.getPercentage();
         }
         return total;
     }

@@ -4,8 +4,6 @@
  */
 
 
-import java.util.ArrayList;
-import java.util.List;
 /**
  *
  * @author Bubbltea
@@ -14,12 +12,10 @@ import java.util.List;
 public class Product {
     private String name;
     private double price;
-    private List<Review> reviews;
 
     public Product(String name, double price) {
         this.name = name;
         this.price = price;
-        this.reviews = new ArrayList<>();
     }
 
     // get&set methods
@@ -39,11 +35,4 @@ public class Product {
         this.price = price;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void addReview(Review review) {
-        this.reviews.add(review);
-    }
 }

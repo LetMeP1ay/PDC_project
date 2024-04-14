@@ -10,13 +10,9 @@
  */
 public class Admin extends User {
 
+//Constructor for admin class. Contains admin as the value for role.
     public Admin(String username, String password, String name, String email) {
-        super(username, password, name, email);
-    }
-
-    @Override
-    public boolean isAdmin() {
-        return true;
+        super(username, password, "admin", name, email);
     }
     
 }
