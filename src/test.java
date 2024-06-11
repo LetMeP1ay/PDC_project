@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public class test {
     public static void main(String[] args) {
-        String databaseURL = "jdbc:derby:/Users/letmeplay/NetBeansProjects/PDC_project/OSS_DB";
+        String databaseURL = "jdbc:derby:OSS_DB";
         try {
             Connection connection = DriverManager.getConnection(databaseURL);
             
