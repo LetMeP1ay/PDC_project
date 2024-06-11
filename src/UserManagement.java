@@ -16,6 +16,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
  
  public class UserManagement {
      private List<Customer> customers;
@@ -76,6 +78,14 @@ import java.util.List;
             e.printStackTrace();
         }
         return false;
+    }
+
+        // This method allows us to validate the user's email by checking the characters in the email against a regular expression.
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     // show all orders for a specific customer
