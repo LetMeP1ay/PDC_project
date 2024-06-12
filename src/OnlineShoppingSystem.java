@@ -29,9 +29,10 @@ public class OnlineShoppingSystem {
 
         // allow users to log in or create an account
         public static void main(String[] args) {
-        appRunning = true;
-        Scanner scanner = new Scanner(System.in);
-        UserManagement userManagement = new UserManagement();
+            ShoppingSystemDB.initializeDatabase();
+            appRunning = true;
+            Scanner scanner = new Scanner(System.in);
+            UserManagement userManagement = new UserManagement();
 
         while(appRunning) {
             try {

@@ -4,9 +4,10 @@
  */
 
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,20 +75,23 @@ public class Order {
         
     }
 
-    // save the order to a file in an easy to read format for admins and users to view
-    public void saveToFile() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("./src/Resources/Order.txt", true))) {
-            writer.println("Order ID: " + orderId);
-            writer.println("Customer: " + customer.getName());
-            writer.println("Products:");
+    // save the order to the database in an easy to read format for admins to view
+     public void saveToDatabase() {
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:OSS_DB;create=true");
+             Statement stmt = conn.createStatement()) {
+            StringBuilder productStr = new StringBuilder();
             for (Product product : products) {
-                writer.println("- " + product.getName() + ": " + product.getPrice());
+                productStr.append(product.getName());
             }
-            writer.println("Total: " + payment.getAmount());
-            writer.println("Payment status: " + payment.getStatus());
-            writer.println();
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving the order.");
+            String sql = "INSERT INTO ORDERS (ORDERS_ID, ORDERS_TOTAL, ORDERS_STATUS, USERS_USERNAME, INVENTORY_PRODNAME) VALUES ('" +
+                         orderId.toString() + "', '" +
+                         payment.getAmount() + "', '" +
+                         payment.getStatus() + "', " +
+                         customer.getUsername() + ", '" +
+                         productStr.toString() + "')";
+            stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
     

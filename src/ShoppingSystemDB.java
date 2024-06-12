@@ -16,7 +16,7 @@ import java.sql.Statement;
 
 public class ShoppingSystemDB {
     
-    private static final String DB_URL = "jdbc:derby:./OSS_DB;create=true";
+    private static final String DB_URL = "jdbc:derby:OSS_DB;create=true";
 
     public static void initializeDatabase() {
         if (dbIsEmpty()) {
@@ -34,7 +34,7 @@ public class ShoppingSystemDB {
                 return tableCount == 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return true;
     }
