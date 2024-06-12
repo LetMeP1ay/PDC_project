@@ -19,7 +19,7 @@ import java.util.List;
 public class InventoryManagement {
 
     private HashMap<Product, Integer> inventory;
-    private static final String DB_URL = "jdbc:derby:/Users/letmeplay/NetBeansProjects/PDC_project/OSS_DB;create=true";
+    private static final String DB_URL = "jdbc:derby:OSS_DB;create=true";
 
     public InventoryManagement() {
         this.inventory = new HashMap<>();
