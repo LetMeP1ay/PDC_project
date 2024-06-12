@@ -3,9 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,15 +22,17 @@ public abstract class User {
     private String name;
     private String email;
     private String role;
+    private static final String DB_URL = "jdbc:derby:OSS_DB;create=true";
 
     public User(String username, String password, String role, String name, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
         setEmail(email);
-        this.role = "customer";
+        this.role = role;
     }
-// getters and setters
+    // getters and setters
+
     public String getRole() {
         return role;
     }
@@ -72,41 +76,34 @@ public abstract class User {
     // This method allows us to authenticate the user by their username and password.
     public static boolean authenticate(String username, String password) {
         boolean success = false;
-        try (BufferedReader reader = new BufferedReader(new FileReader("./src/Resources/Users.txt"))) {
-            String line;
-            while (((line = reader.readLine()) != null)) {
-                String[] userArr = line.split(",gaspoweredwheelchair123908519283908563908asjkfgs9a780as908gh0sd");
-                String storedUsername = userArr[0];
-                String storedPassword = userArr[1].split(",monkeyCyrus89001884844812394123748127349871d2j3s491k234al712934dn1m28s34")[0];
-                if(storedUsername.equals(username) && storedPassword.equals(password)) {
-                    success = true;
-                    break;
-                }
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement()) {
+            String sql = "SELECT COUNT(*) FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '" + password + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next() && rs.getInt(1) > 0) {
+                success = true;
             }
-        }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-            return success;
-        }
-
-        // This method allows us to retrieve the user's role by their username and password. 
-        // for example, whether they are an admin or a customer.
-    public static String getUserRole(String username, String password) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("./src/Resources/Users.txt"))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                String[] userArr = line.split(",gaspoweredwheelchair123908519283908563908asjkfgs9a780as908gh0sd"+password+",monkeyCyrus89001884844812394123748127349871d2j3s491k234al712934dn1m28s34");
-                String storedUsername = userArr[0];
-                if (storedUsername.equals(username)) {
-                    return userArr[1].split(",funnynamejfasdiasdfk")[0];
-                }
-            }
-        }
-        catch(IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "invalid";
+        return success;
+    }
+
+    // This method allows us to retrieve the user's role by their username and password. 
+    // for example, whether they are an admin or a customer.
+    public static String getUserRole(String username, String password) {
+        String role = "invalid";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement()) {
+            String sql = "SELECT USERS_ROLE FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '" + password + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                role = rs.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return role;
     }
 
     // This method allows us to validate the user's email by checking the characters in the email against a regular expression.

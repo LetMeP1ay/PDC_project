@@ -3,13 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-
 /**
  *
  * @author Bubbltea
  */
-
 public class Discount {
+
     private String code;
     private double percentage;
     private boolean isActive;
@@ -33,15 +32,16 @@ public class Discount {
         return isActive;
     }
 // Retrieve the status of the current discount based on the isActive variable.
+
     public String retrieveStatus() {
         if (isActive) {
             return "Your discount is currently active.";
-        }
-        else {
+        } else {
             return "Your discount is currently disabled.";
         }
     }
 // Toggle the discount
+
     public void changeActive() {
         isActive = !isActive;
         if (isActive) {
@@ -50,6 +50,7 @@ public class Discount {
             System.out.println("The discount is now disabled.");
         }
     }
+
     @Override
     public String toString() {
         return code + "," + percentage + "," + isActive;
