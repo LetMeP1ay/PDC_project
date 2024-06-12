@@ -68,14 +68,22 @@ public class OnlineShoppingSystemGUI extends JFrame {
             
             boolean isAuthenticated = User.authenticate(username, new String(password));
             
-            if (isAuthenticated) {
+            if (isAuthenticated && User.getUserRole(username, new String(password)).equals("admin")) {
                 JOptionPane.showMessageDialog(loginDialog, "Login Successful");
                 loginDialog.dispose();
+                initializeAdminMenuBar();
                 showLandingPage();
-                //opening the next window or dialog based on user role
+            }
+            else if (isAuthenticated && User.getUserRole(username, new String(password)).equals("customer")) {
+                JOptionPane.showMessageDialog(loginDialog, "Login Successful");
+                loginDialog.dispose();
+                initializeCustomerMenuBar();
+                showLandingPage();
             } else {
                 JOptionPane.showMessageDialog(loginDialog, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
                 //clear the fields or take other actions
+                userTextField.setText("");
+                passwordField.setText("");
             }
         });
     
@@ -162,48 +170,106 @@ public class OnlineShoppingSystemGUI extends JFrame {
         JPanel landingPagePanel = new JPanel();
         landingPagePanel.add(new JLabel("Welcome to the Online Shopping System"));
         cardPanel.add(landingPagePanel, "LandingPage");
-        
-        JMenuBar menuBar = new JMenuBar();
     
-        //menus
+        //show the landing page
+        cardLayout.show(cardPanel, "LandingPage");
+    }
+
+    public void initializeCustomerMenuBar() {
+        JMenuBar menuBar = getJMenuBar();
+        if (menuBar == null) {
+            menuBar = new JMenuBar();
+        } else {
+            menuBar.removeAll();
+        }
+    
         JMenu productsMenu = new JMenu("Products");
         JMenu ordersMenu = new JMenu("Orders");
         JMenu accountMenu = new JMenu("Account Settings");
     
-        //products
         JMenuItem viewProductsItem = new JMenuItem("View Products");
         JMenuItem searchProductItem = new JMenuItem("Search for a Product");
-    
-        //action listeners for switch panels
         viewProductsItem.addActionListener(e -> switchToPanel("ViewProducts"));
         searchProductItem.addActionListener(e -> switchToPanel("SearchProduct"));
-    
-        //add items to products menu
         productsMenu.add(viewProductsItem);
         productsMenu.add(searchProductItem);
     
         JMenuItem viewOrdersItem = new JMenuItem("View Orders");
         viewOrdersItem.addActionListener(e -> switchToPanel("ViewOrders"));
         ordersMenu.add(viewOrdersItem);
-
-        JMenuItem viewAccountItem = new JMenuItem("View Account");
-        viewAccountItem.addActionListener(e -> switchToPanel("ViewAccount"));
-        accountMenu.add(viewAccountItem);
-
-        JMenuItem logout = new JMenuItem("Logout");
-        accountMenu.add(logout);
-
     
-        // Add menus to menu bar
+        JMenuItem logoutItem = new JMenuItem("Logout");
+        logoutItem.addActionListener(e -> logout());
+        accountMenu.add(logoutItem);
+    
         menuBar.add(productsMenu);
         menuBar.add(ordersMenu);
         menuBar.add(accountMenu);
     
-        //set the JMenuBar on the JFrame
-        this.setJMenuBar(menuBar);
+        setJMenuBar(menuBar);
     
-        //show the landing page
-        cardLayout.show(cardPanel, "LandingPage");
+        invalidate();
+        repaint();
+    }
+
+    private void initializeAdminMenuBar() {
+
+        JMenuBar menuBar = getJMenuBar();
+        if (menuBar == null) {
+            menuBar = new JMenuBar();
+        }
+    
+        JMenu adminMenu = new JMenu("Admin");
+    
+        JMenuItem editProductsItem = new JMenuItem("Edit Products");
+        JMenuItem manageDiscountsItem = new JMenuItem("Manage Discounts");
+        JMenuItem viewOrdersItem = new JMenuItem("View Orders");
+        JMenuItem viewProductsItem = new JMenuItem("View Products");
+    
+        editProductsItem.addActionListener(e -> editProducts());
+        manageDiscountsItem.addActionListener(e -> manageDiscounts());
+        viewOrdersItem.addActionListener(e -> viewOrders());
+        viewProductsItem.addActionListener(e -> viewProducts());
+
+        JMenuItem logoutItem = new JMenuItem("Logout");
+        logoutItem.addActionListener(e -> logout());
+        adminMenu.add(logoutItem);
+    
+        adminMenu.add(editProductsItem);
+        adminMenu.add(manageDiscountsItem);
+        adminMenu.add(viewOrdersItem);
+        adminMenu.add(viewProductsItem);
+    
+        menuBar.add(adminMenu);
+    
+        setJMenuBar(menuBar);
+    
+        invalidate();
+        repaint();
+    }
+
+    private void editProducts() {
+        // todo: edit products
+    }
+    
+    private void manageDiscounts() {
+        // todo: manage discounts
+    }
+    
+    private void viewOrders() {
+        // todo: view orders
+    }
+    
+    private void viewProducts() {
+        // todo: view products
+    }
+
+    //return to login and hide the menu bar
+    public void logout() {
+        this.setJMenuBar(null);
+        this.invalidate();
+        this.repaint();
+        switchToPanel("Login");
     }
     
     //switch panels
