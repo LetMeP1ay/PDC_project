@@ -27,11 +27,11 @@ public class OnlineShoppingSystem {
     private static UserManagement userManagement = new UserManagement();
     private static Customer loggedCustomer;
 
-            // allow users to log in or create an account
+        // allow users to log in or create an account
         public static void main(String[] args) {
-        appRunning = true;
-        Scanner scanner = new Scanner(System.in);
-        UserManagement userManagement = new UserManagement();
+            ShoppingSystemDB.initializeDatabase();
+            appRunning = true;
+            Scanner scanner = new Scanner(System.in);
 
         while(appRunning) {
             try {
@@ -85,7 +85,7 @@ public class OnlineShoppingSystem {
 
                         if (newCustomer.getEmail() != null) {
                             userManagement.addUser(newCustomer);
-                            userManagement.saveUsersToFile();
+                            userManagement.saveUsersToDB();
                             System.out.println("Account created successfully!");
                             break;
                         }
@@ -298,10 +298,10 @@ public class OnlineShoppingSystem {
                             if (paymentSuccess) {
                                 shoppingCart.clearCart();
                                 userManagement.updateUser(loggedCustomer);
-                                userManagement.saveUsersToFile();
+                                userManagement.saveUsersToDB();
                                 order.setProducts(shoppingCart.getProducts());
                                 order.setStatus();
-                                order.saveToFile();
+                                order.saveToDatabase();
                                 System.out.println("Payment successful. You can check your orders for more information.");
                             } else {
                                 System.out.println("Payment failed. Do you want to add money to your balance? (yes/no)");
@@ -316,9 +316,9 @@ public class OnlineShoppingSystem {
                                     payment.processPayment(loggedCustomer);
                                     order.setProducts(shoppingCart.getProducts());
                                     order.setStatus();
-                                    order.saveToFile();
+                                    order.saveToDatabase();
                                     userManagement.updateUser(loggedCustomer);
-                                    userManagement.saveUsersToFile();
+                                    userManagement.saveUsersToDB();
                                 }
                             }
                         } else {
