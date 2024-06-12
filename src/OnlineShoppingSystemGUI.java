@@ -253,8 +253,24 @@ public class OnlineShoppingSystemGUI extends JFrame {
     }
     
     private void manageDiscounts() {
-        // todo: manage discounts
+
+        Discount discount = new Discount();
+    
+        String message = "Current Discount Code: " + discount.getCode() + " (" + discount.getPercentage()*100 + "%)\n" +
+                         discount.retrieveStatus() + "\n" +
+                         "Do you want to toggle the discount status?";
+        
+        //confirm dialog to ask if the admin wants to toggle the discount status
+        int response = JOptionPane.showConfirmDialog(null, message, "Manage Discounts", JOptionPane.YES_NO_OPTION);
+        
+        //toggle the discount status
+        if (response == JOptionPane.YES_OPTION) {
+            discount.changeActive();
+
+            JOptionPane.showMessageDialog(null, "Discount status changed.\n" + discount.retrieveStatus());
+        }
     }
+    
     
     private void viewOrders() {
         // todo: view orders

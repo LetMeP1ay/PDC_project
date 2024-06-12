@@ -34,7 +34,7 @@ public class Discount {
     }
 // Retrieve the status of the current discount based on the isActive variable.
     public String retrieveStatus() {
-        if (isActive) {
+        if (isActive == true) {
             return "Your discount is currently active.";
         }
         else {
@@ -43,11 +43,11 @@ public class Discount {
     }
 // Toggle the discount
     public void changeActive() {
-        isActive = !isActive;
-        if (isActive) {
-            System.out.println("The discount is now active.");
+
+        if (isActive == true) {
+            this.isActive = false;
         } else {
-            System.out.println("The discount is now disabled.");
+            this.isActive = true;
         }
     }
     @Override
