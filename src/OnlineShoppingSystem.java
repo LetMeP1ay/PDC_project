@@ -27,7 +27,7 @@ public class OnlineShoppingSystem {
     private static UserManagement userManagement = new UserManagement();
     private static Customer loggedCustomer;
 
-            // allow users to log in or create an account
+        // allow users to log in or create an account
         public static void main(String[] args) {
         appRunning = true;
         Scanner scanner = new Scanner(System.in);
