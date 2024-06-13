@@ -54,6 +54,7 @@ public class InventoryManagement {
         return products;
     }
 
+    // get the quantity of the selected product
     public int getProductQuantity(Product product) {
         int quantity = 0;
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -80,13 +81,63 @@ public class InventoryManagement {
         }
     }
 
-
-    public void deductProductQuantity(Product product) {
+    // Move the product from the inventory to user's shopping cart
+    public void moveToShoppingCart(Product product, String username) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
-            String sql = "UPDATE INVENTORY SET INVENTORY_QUANTITY = INVENTORY_QUANTITY - 1 WHERE INVENTORY_PRODNAME = '"
-                    + product.getName() + "'";
-            stmt.executeUpdate(sql);
+                Statement stmt = conn.createStatement()) {
+            conn.setAutoCommit(false);
+
+            try {
+                // Check if the product quantity is greater than 0
+                String checkQuantitySql = "SELECT INVENTORY_QUANTITY FROM INVENTORY WHERE INVENTORY_PRODNAME = '"
+                        + product.getName().replace("'", "''") + "'";
+                ResultSet rs = stmt.executeQuery(checkQuantitySql);
+
+                if (rs.next()) {
+                    int quantity = rs.getInt("INVENTORY_QUANTITY");
+                    if (quantity <= 0) {
+                        System.out.println("The product is out of stock and cannot be added to the cart.");
+                        conn.rollback();
+                        return;
+                    }
+                } else {
+                    System.out.println("The product does not exist in the inventory.");
+                    conn.rollback();
+                    return;
+                }
+
+                // Deduct the product quantity from the inventory
+                String deductSql = "UPDATE INVENTORY SET INVENTORY_QUANTITY = INVENTORY_QUANTITY - 1 WHERE INVENTORY_PRODNAME = '"
+                        + product.getName().replace("'", "''") + "'";
+                stmt.executeUpdate(deductSql);
+
+                // Check if the product is already in the user's cart
+                String checkCartSql = "SELECT * FROM CART WHERE USERS_USERNAME = '" + username.replace("'", "''")
+                        + "' AND PRODUCT_ID = '"
+                        + product.getName().replace("'", "''") + "'";
+                rs = stmt.executeQuery(checkCartSql);
+
+                if (rs.next()) {
+                    // Update the quantity if the product is already in the cart
+                    String updateCartSql = "UPDATE CART SET QUANTITY = QUANTITY + 1 WHERE USERS_USERNAME = '"
+                            + username.replace("'", "''") + "' AND PRODUCT_ID = '"
+                            + product.getName().replace("'", "''") + "'";
+                    stmt.executeUpdate(updateCartSql);
+                } else {
+                    // Insert the product into the cart if it's not already there
+                    String insertCartSql = "INSERT INTO CART (USERS_USERNAME, PRODUCT_ID, QUANTITY, PRICE) VALUES ('"
+                            + username.replace("'", "''") + "', '" + product.getName().replace("'", "''") + "', 1, "
+                            + product.getPrice() + ")";
+                    stmt.executeUpdate(insertCartSql);
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println(e.getMessage());
+            } finally {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

@@ -52,7 +52,12 @@ public class ShoppingSystemDB {
                             +
                             "USERS_USERNAME VARCHAR(50), INVENTORY_PRODNAME VARCHAR(50), FOREIGN KEY (USERS_USERNAME) REFERENCES USERS(USERS_USERNAME), "
                             +
-                            "FOREIGN KEY (INVENTORY_PRODNAME) REFERENCES INVENTORY(INVENTORY_PRODNAME))"
+                            "FOREIGN KEY (INVENTORY_PRODNAME) REFERENCES INVENTORY(INVENTORY_PRODNAME))",
+                    "CREATE TABLE CART (USERS_USERNAME VARCHAR(50), PRODUCT_ID VARCHAR(50), "
+                            + "QUANTITY INT, PRICE DOUBLE, PRIMARY KEY (USERS_USERNAME, PRODUCT_ID), "
+                            + "FOREIGN KEY (USERS_USERNAME) REFERENCES USERS(USERS_USERNAME), "
+                            + "FOREIGN KEY (PRODUCT_ID) REFERENCES INVENTORY(INVENTORY_PRODNAME))"
+
             };
 
             for (String sql : tables) {

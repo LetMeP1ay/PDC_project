@@ -24,6 +24,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         setTitle("Online Shopping System");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ShoppingSystemDB.initializeDatabase();
 
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
@@ -291,7 +292,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
                 if (SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 1) {
                     int index = productList.locationToIndex(e.getPoint());
                     Product selectedProduct = products.get(index);
-                    shoppingCart.addProduct(selectedProduct);
+                    inventoryManagement.moveToShoppingCart(selectedProduct, currentUser);
                     JOptionPane.showMessageDialog(null, selectedProduct.getName() + " added to cart.");
                 }
             }
@@ -472,7 +473,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
     }
 
     private void viewCart() {
-        List<Product> cartProducts = shoppingCart.getProducts();
+        List<Product> cartProducts = shoppingCart.getCartDetails(currentUser);
         DefaultListModel<String> cartModel = new DefaultListModel<>();
         for (Product product : cartProducts) {
             cartModel.addElement(product.getName() + " - $" + product.getPrice());
@@ -487,8 +488,8 @@ public class OnlineShoppingSystemGUI extends JFrame {
         // Clear Cart button
         JButton clearCartButton = new JButton("Clear Cart");
         clearCartButton.addActionListener(e -> {
-            shoppingCart.clearCart(); // Assuming there's a method to clear the cart
-            cartModel.clear(); // Clear the list model to update the UI
+            shoppingCart.clearCart(currentUser);
+            cartModel.clear();
         });
         buttonsPanel.add(clearCartButton);
     
@@ -536,7 +537,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         order.saveToDatabase();
         
         // Step 5: Clear the shopping cart
-        shoppingCart.clearCart();
+        shoppingCart.clearCart(currentUser);
         
         // Step 6: Display a confirmation message
         JOptionPane.showMessageDialog(this, "Your order has been placed successfully!", "Order Placed", JOptionPane.INFORMATION_MESSAGE);
