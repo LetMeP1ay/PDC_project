@@ -53,7 +53,7 @@ public class Customer extends User {
 
     public void setBalance(double balance) {
         if (balance > 0) {
-            this.balance += balance;
+            this.balance = balance;
         } else {
             System.out.println("Please, enter a value greater than 0.");
         }

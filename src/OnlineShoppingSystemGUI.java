@@ -52,8 +52,8 @@ public class OnlineShoppingSystemGUI extends JFrame {
         add(cardPanel);
     }
 
+    // Display login dialog
     private void showLoginDialog() {
-
         JDialog loginDialog = new JDialog(this, "Login", true);
         loginDialog.setLayout(new BoxLayout(loginDialog.getContentPane(), BoxLayout.Y_AXIS));
         loginDialog.setSize(300, 175);
@@ -93,7 +93,6 @@ public class OnlineShoppingSystemGUI extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(loginDialog, "Invalid username or password", "Login Failed",
                         JOptionPane.ERROR_MESSAGE);
-                // clear the fields or take other actions
                 userTextField.setText("");
                 passwordField.setText("");
             }
@@ -105,8 +104,8 @@ public class OnlineShoppingSystemGUI extends JFrame {
         loginDialog.setVisible(true);
     }
 
+    // Display account creation dialog
     private void showAccountCreationDialog() {
-
         JDialog accountCreationDialog = new JDialog(this, "Create Account", true);
         accountCreationDialog.setLayout(new BoxLayout(accountCreationDialog.getContentPane(), BoxLayout.Y_AXIS));
         accountCreationDialog.setSize(300, 300);
@@ -151,45 +150,36 @@ public class OnlineShoppingSystemGUI extends JFrame {
                 userManagement.saveUsersToDB();
                 JOptionPane.showMessageDialog(accountCreationDialog, "Account Created Successfully");
                 accountCreationDialog.dispose();
-            }
-            // check if any field is empty
-            else if (username == null || password == null || email == null || name == null || address == null) {
+            } else if (username == null || password == null || email == null || name == null || address == null) {
                 JOptionPane.showMessageDialog(accountCreationDialog, "Please fill all fields",
                         "Account Creation Failed", JOptionPane.ERROR_MESSAGE);
-                // clear the fields or take other actions
-            }
-            // Check if username already exists
-            else if (userManagement.usernameExists(username)) {
+            } else if (userManagement.usernameExists(username)) {
                 JOptionPane.showMessageDialog(accountCreationDialog, "That Username is Already Taken",
                         "Account Creation Failed", JOptionPane.ERROR_MESSAGE);
-                // clear the fields or take other actions
             } else if (!userManagement.isValidEmail(email)) {
                 JOptionPane.showMessageDialog(accountCreationDialog, "Invalid Email Format", "Account Creation Failed",
                         JOptionPane.ERROR_MESSAGE);
-                // clear the fields or take other actions
             } else {
                 JOptionPane.showMessageDialog(accountCreationDialog, "Account Creation Failed",
                         "Account Creation Failed", JOptionPane.ERROR_MESSAGE);
-                // clear the fields or take other actions
             }
-
         });
 
         cancelButton.addActionListener(e -> accountCreationDialog.dispose());
 
-        accountCreationDialog.setLocationRelativeTo(this); // Center on parent (the JFrame)
+        accountCreationDialog.setLocationRelativeTo(this);
         accountCreationDialog.setVisible(true);
     }
 
+    // Show landing page
     private void showLandingPage() {
         JPanel landingPagePanel = new JPanel();
         landingPagePanel.add(new JLabel("Welcome to the Online Shopping System"));
         cardPanel.add(landingPagePanel, "LandingPage");
-
-        // show the landing page
         cardLayout.show(cardPanel, "LandingPage");
     }
 
+    // Initialize customer menu bar
     public void initializeCustomerMenuBar() {
         JMenuBar menuBar = getJMenuBar();
         if (menuBar == null) {
@@ -233,13 +223,12 @@ public class OnlineShoppingSystemGUI extends JFrame {
         menuBar.add(accountMenu);
 
         setJMenuBar(menuBar);
-
         invalidate();
         repaint();
     }
 
+    // Initialize admin menu bar
     private void initializeAdminMenuBar() {
-
         JMenuBar menuBar = getJMenuBar();
         if (menuBar == null) {
             menuBar = new JMenuBar();
@@ -269,11 +258,11 @@ public class OnlineShoppingSystemGUI extends JFrame {
         menuBar.add(adminMenu);
 
         setJMenuBar(menuBar);
-
         invalidate();
         repaint();
     }
 
+    // Display products available for customers
     private void viewProducts() {
         InventoryManagement inventoryManagement = new InventoryManagement();
         List<Map.Entry<Product, Integer>> productsWithQuantities = inventoryManagement.getAllProducts();
@@ -305,6 +294,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         switchToPanel("ViewProducts");
     }
 
+    // Edit products for admin
     private void editProducts() {
         InventoryManagement inventoryManagement = new InventoryManagement();
         List<Map.Entry<Product, Integer>> productsWithQuantities = inventoryManagement.getAllProducts();
@@ -319,17 +309,14 @@ public class OnlineShoppingSystemGUI extends JFrame {
         JPanel editProductsPanel = new JPanel();
         editProductsPanel.setLayout(new BorderLayout());
 
-        // Model for the products list
         JList<String> productsList = new JList<>(productsModel);
         JScrollPane scrollPane = new JScrollPane(productsList);
         editProductsPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // menu for deleting a product
         JPopupMenu contextMenu = new JPopupMenu();
         JMenuItem deleteItem = new JMenuItem("Delete");
         contextMenu.add(deleteItem);
 
-        // listener for right-click
         productsList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e) && !productsList.isSelectionEmpty()
@@ -339,7 +326,6 @@ public class OnlineShoppingSystemGUI extends JFrame {
             }
         });
 
-        // delete action
         deleteItem.addActionListener(e -> {
             int selectedIndex = productsList.getSelectedIndex();
             if (selectedIndex != -1) {
@@ -364,7 +350,6 @@ public class OnlineShoppingSystemGUI extends JFrame {
         addProductPanel.add(stockField);
         addProductPanel.add(createButton);
 
-        // create action
         createButton.addActionListener(e -> {
             String name = nameField.getText();
             double price = Double.parseDouble(priceField.getText());
@@ -383,25 +368,23 @@ public class OnlineShoppingSystemGUI extends JFrame {
         switchToPanel("EditProducts");
     }
 
+    // Manage discounts for admin
     private void manageDiscounts() {
-
         Discount discount = new Discount();
 
         String message = "Current Discount Code: " + discount.getCode() + " (" + discount.getPercentage() * 100 + "%)\n"
-                +
-                discount.retrieveStatus() + "\n" +
+                + discount.retrieveStatus() + "\n" +
                 "Do you want to toggle the discount status?";
 
         int response = JOptionPane.showConfirmDialog(null, message, "Manage Discounts", JOptionPane.YES_NO_OPTION);
 
-        // toggle the discount status
         if (response == JOptionPane.YES_OPTION) {
             discount.changeActive();
-
             JOptionPane.showMessageDialog(null, "Discount status changed.\n" + discount.retrieveStatus());
         }
     }
 
+    // Display orders for both customers and admins
     private void viewOrders() {
         DefaultListModel<String> ordersModel = new DefaultListModel<>();
 
@@ -410,14 +393,11 @@ public class OnlineShoppingSystemGUI extends JFrame {
 
             for (Order order : orders) {
                 StringBuilder productsDetails = new StringBuilder();
-
-                // Create a map to count product quantities
                 HashMap<String, Integer> productQuantities = new HashMap<>();
                 for (Product product : order.getProducts()) {
                     productQuantities.put(product.getName(), productQuantities.getOrDefault(product.getName(), 0) + 1);
                 }
 
-                // Build the product details string
                 for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
                     productsDetails.append(entry.getKey()).append(" (Quantity: ").append(entry.getValue())
                             .append(")<br>");
@@ -438,14 +418,11 @@ public class OnlineShoppingSystemGUI extends JFrame {
 
             for (Order order : orders) {
                 StringBuilder productsDetails = new StringBuilder();
-
-                // Create a map to count product quantities
                 HashMap<String, Integer> productQuantities = new HashMap<>();
                 for (Product product : order.getProducts()) {
                     productQuantities.put(product.getName(), productQuantities.getOrDefault(product.getName(), 0) + 1);
                 }
 
-                // Build the product details string
                 for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
                     productsDetails.append(entry.getKey()).append(" (Quantity: ").append(entry.getValue())
                             .append(")<br>");
@@ -469,10 +446,10 @@ public class OnlineShoppingSystemGUI extends JFrame {
         ordersPanel.add(scrollPane, BorderLayout.CENTER);
 
         cardPanel.add(ordersPanel, "ViewOrders");
-
         switchToPanel("ViewOrders");
     }
 
+    // View and add funds to customer account
     private void viewAndAddFunds() {
         JPanel fundsPanel = new JPanel(new BorderLayout());
 
@@ -496,7 +473,6 @@ public class OnlineShoppingSystemGUI extends JFrame {
                     authenticatedUser.setBalance(authenticatedUser.getBalance() + amount);
                     balanceLabel.setText("Current Balance: $" + authenticatedUser.getBalance());
 
-                    userManagement.updateUser(authenticatedUser);
                     authenticatedUser.updateBalance();
                     JOptionPane.showMessageDialog(this, "Funds added successfully!", "Success",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -515,6 +491,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         switchToPanel("ViewAndAddFunds");
     }
 
+    // View shopping cart for customer
     private void viewCart() {
         List<Map.Entry<Product, Integer>> cartProducts = shoppingCart.getCartDetails(currentUser);
         DefaultListModel<String> cartModel = new DefaultListModel<>();
@@ -549,6 +526,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         switchToPanel("ViewCart");
     }
 
+    // Checkout process for customer
     private void checkOut() {
         List<Map.Entry<Product, Integer>> cartProducts = shoppingCart.getCartDetails(currentUser);
 
@@ -565,7 +543,6 @@ public class OnlineShoppingSystemGUI extends JFrame {
             int quantity = entry.getValue();
             totalAmount += product.getPrice() * quantity;
 
-            // Add the product multiple times based on its quantity
             for (int i = 0; i < quantity; i++) {
                 products.add(product);
             }
@@ -581,7 +558,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         }
 
         Order order = new Order(authenticatedUser, payment);
-        order.setProducts(products); // Set the products list which includes quantities
+        order.setProducts(products);
         order.setStatus();
         order.saveToDatabase();
 
@@ -593,7 +570,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         switchToPanel("OrderConfirmation");
     }
 
-    // return to login and hide the menu bar
+    // Logout user and return to login screen
     public void logout() {
         this.setJMenuBar(null);
         this.invalidate();
@@ -602,7 +579,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
         switchToPanel("Login");
     }
 
-    // switch panels
+    // Switch between panels
     private void switchToPanel(String panelName) {
         cardLayout.show(cardPanel, panelName);
     }

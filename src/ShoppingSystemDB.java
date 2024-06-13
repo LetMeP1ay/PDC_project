@@ -18,12 +18,16 @@ public class ShoppingSystemDB {
 
     private static final String DB_URL = "jdbc:derby:OSS_DB;create=true";
 
+    // Checks if the database has no tables. If so, creates them and populates with standard data.
+
     public static void initializeDatabase() {
         if (dbIsEmpty()) {
             createTables();
             populateInitialData();
         }
     }
+
+    // Checks if the database has no tables.
 
     private static boolean dbIsEmpty() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -39,6 +43,8 @@ public class ShoppingSystemDB {
         }
         return true;
     }
+
+    // Creates the necessary tables.
 
     private static void createTables() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -64,6 +70,8 @@ public class ShoppingSystemDB {
         }
     }
 
+    // Populates the USERS table with admin user.
+
     private static void populateInitialData() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
                 Statement stmt = conn.createStatement()) {
@@ -79,6 +87,8 @@ public class ShoppingSystemDB {
             e.printStackTrace();
         }
     }
+
+    // Removes the tables. We used this method when we had problems with the DB.
 
     public static void removeTables() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
