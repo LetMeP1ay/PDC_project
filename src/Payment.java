@@ -22,6 +22,7 @@ public class Payment {
     public boolean processPayment(Customer customer) {
         if (customer.getBalance() >= amount) {
             customer.changeBalance(amount);
+            customer.updateBalance();
             this.status = "Paid";
             return true;
         } else {
@@ -29,7 +30,6 @@ public class Payment {
             return false;
         }
     }
-
     // get&set methods
     public double getAmount() {
         return amount;

@@ -59,6 +59,8 @@ public class Customer extends User {
         }
     }
 
+
+    // Method to update the users balance in the database
     public void updateBalance() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
         PreparedStatement stmt = conn.prepareStatement("UPDATE USERS SET USERS_BALANCE = ? WHERE USERS_USERNAME = ?")) {

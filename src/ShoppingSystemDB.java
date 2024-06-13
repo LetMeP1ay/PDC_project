@@ -45,21 +45,16 @@ public class ShoppingSystemDB {
                 Statement stmt = conn.createStatement()) {
             String[] tables = {
                     "CREATE TABLE USERS (USERS_USERNAME VARCHAR(50) PRIMARY KEY, USERS_PASSWORD VARCHAR(50), USERS_ROLE VARCHAR(50), "
-                            +
-                            "USERS_NAME VARCHAR(50), USERS_EMAIL VARCHAR(50), USERS_ADDRESS VARCHAR(50), USERS_BALANCE DOUBLE)",
+                            + "USERS_NAME VARCHAR(50), USERS_EMAIL VARCHAR(50), USERS_ADDRESS VARCHAR(50), USERS_BALANCE DOUBLE)",
                     "CREATE TABLE INVENTORY (INVENTORY_PRODNAME VARCHAR(50) PRIMARY KEY, INVENTORY_PRICE DOUBLE, INVENTORY_QUANTITY INT)",
                     "CREATE TABLE ORDERS (ORDERS_ID VARCHAR(50) PRIMARY KEY, ORDERS_TOTAL DOUBLE, ORDERS_STATUS VARCHAR(50), "
-                            +
-                            "USERS_USERNAME VARCHAR(50), INVENTORY_PRODNAME VARCHAR(50), FOREIGN KEY (USERS_USERNAME) REFERENCES USERS(USERS_USERNAME), "
-                            +
-                            "FOREIGN KEY (INVENTORY_PRODNAME) REFERENCES INVENTORY(INVENTORY_PRODNAME))",
+                            + "USERS_USERNAME VARCHAR(50), INVENTORY_PRODNAME VARCHAR(50), FOREIGN KEY (USERS_USERNAME) REFERENCES USERS(USERS_USERNAME))",
                     "CREATE TABLE CART (USERS_USERNAME VARCHAR(50), PRODUCT_ID VARCHAR(50), "
                             + "QUANTITY INT, PRICE DOUBLE, PRIMARY KEY (USERS_USERNAME, PRODUCT_ID), "
                             + "FOREIGN KEY (USERS_USERNAME) REFERENCES USERS(USERS_USERNAME), "
                             + "FOREIGN KEY (PRODUCT_ID) REFERENCES INVENTORY(INVENTORY_PRODNAME))"
-
             };
-
+    
             for (String sql : tables) {
                 stmt.executeUpdate(sql);
             }
@@ -81,6 +76,24 @@ public class ShoppingSystemDB {
             }
         } catch (SQLException e) {
             System.out.println("Error populating initial data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeTables() {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+                Statement stmt = conn.createStatement()) {
+            String[] tables = { "ORDERS", "ORDER_PRODUCT", "CART", "INVENTORY", "USERS" };
+
+            for (String table : tables) {
+                try {
+                    stmt.executeUpdate("DROP TABLE " + table);
+                } catch (SQLException e) {
+                    System.out.println("Error dropping table " + table + ": " + e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error removing tables: " + e.getMessage());
             e.printStackTrace();
         }
     }

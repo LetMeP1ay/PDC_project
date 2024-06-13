@@ -1,7 +1,0 @@
-Order ID: e1594a87-e825-4d61-924e-dbe9113359fd
-Customer: ethan
-Products:
-- Cat: 1000.0
-Total: 900.0
-Payment status: Paid
-

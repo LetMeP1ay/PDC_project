@@ -66,7 +66,7 @@ public class UserManagement {
         }
     }
 
-    // check if username exists already in file
+    // check if username exists already in the database
     public boolean usernameExists(String username) {
         boolean exists = false;
         try (Connection conn = DriverManager.getConnection(DB_URL);

@@ -8,8 +8,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -73,17 +75,18 @@ public class ShoppingCart {
     }
 
     // Retrieve shopping cart details from the database
-    public List<Product> getCartDetails(String username) {
-        List<Product> cartDetails = new ArrayList<>();
+    public List<Map.Entry<Product, Integer>> getCartDetails(String username) {
+        List<Map.Entry<Product, Integer>> cartDetails = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(DB_URL);
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT PRODUCT_ID, PRICE FROM CART WHERE USERS_USERNAME = '"
+                ResultSet rs = stmt.executeQuery("SELECT PRODUCT_ID, QUANTITY, PRICE FROM CART WHERE USERS_USERNAME = '"
                         + username.replace("'", "''") + "'")) {
             while (rs.next()) {
                 String productName = rs.getString("PRODUCT_ID");
+                int quantity = rs.getInt("QUANTITY");
                 double price = rs.getDouble("PRICE");
                 Product newProduct = new Product(productName, price);
-                cartDetails.add(newProduct);
+                cartDetails.add(new AbstractMap.SimpleEntry<>(newProduct, quantity));
             }
         } catch (SQLException e) {
             System.out.println("Error retrieving cart details: " + e.getMessage());

@@ -8,9 +8,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -40,18 +43,20 @@ public class InventoryManagement {
     }
 
     // retrieve all products
-    public List<Product> getAllProducts() {
-        List<Product> products = new ArrayList<>();
+    public List<Map.Entry<Product, Integer>> getAllProducts() {
+        List<Map.Entry<Product, Integer>> productsWithQuantities = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(DB_URL);
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM INVENTORY")) {
             while (rs.next()) {
-                products.add(new Product(rs.getString("INVENTORY_PRODNAME"), rs.getDouble("INVENTORY_PRICE")));
+                Product product = new Product(rs.getString("INVENTORY_PRODNAME"), rs.getDouble("INVENTORY_PRICE"));
+                int quantity = rs.getInt("INVENTORY_QUANTITY");
+                productsWithQuantities.add(new AbstractMap.SimpleEntry<>(product, quantity));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return products;
+        return productsWithQuantities;
     }
 
     // get the quantity of the selected product
@@ -112,23 +117,31 @@ public class InventoryManagement {
                 stmt.executeUpdate(deductSql);
 
                 // Check if the product is already in the user's cart
-                String checkCartSql = "SELECT * FROM CART WHERE USERS_USERNAME = '" + username.replace("'", "''")
+                String checkCartSql = "SELECT QUANTITY FROM CART WHERE USERS_USERNAME = '" + username.replace("'", "''")
                         + "' AND PRODUCT_ID = '"
                         + product.getName().replace("'", "''") + "'";
                 rs = stmt.executeQuery(checkCartSql);
 
                 if (rs.next()) {
                     // Update the quantity if the product is already in the cart
-                    String updateCartSql = "UPDATE CART SET QUANTITY = QUANTITY + 1 WHERE USERS_USERNAME = '"
-                            + username.replace("'", "''") + "' AND PRODUCT_ID = '"
-                            + product.getName().replace("'", "''") + "'";
-                    stmt.executeUpdate(updateCartSql);
+                    int currentQuantity = rs.getInt("QUANTITY");
+                    String updateCartSql = "UPDATE CART SET QUANTITY = ? WHERE USERS_USERNAME = ? AND PRODUCT_ID = ?";
+                    try (PreparedStatement pstmt = conn.prepareStatement(updateCartSql)) {
+                        pstmt.setInt(1, currentQuantity + 1);
+                        pstmt.setString(2, username.replace("'", "''"));
+                        pstmt.setString(3, product.getName().replace("'", "''"));
+                        pstmt.executeUpdate();
+                    }
                 } else {
                     // Insert the product into the cart if it's not already there
-                    String insertCartSql = "INSERT INTO CART (USERS_USERNAME, PRODUCT_ID, QUANTITY, PRICE) VALUES ('"
-                            + username.replace("'", "''") + "', '" + product.getName().replace("'", "''") + "', 1, "
-                            + product.getPrice() + ")";
-                    stmt.executeUpdate(insertCartSql);
+                    String insertCartSql = "INSERT INTO CART (USERS_USERNAME, PRODUCT_ID, QUANTITY, PRICE) VALUES (?, ?, ?, ?)";
+                    try (PreparedStatement pstmt = conn.prepareStatement(insertCartSql)) {
+                        pstmt.setString(1, username.replace("'", "''"));
+                        pstmt.setString(2, product.getName().replace("'", "''"));
+                        pstmt.setInt(3, 1);
+                        pstmt.setDouble(4, product.getPrice());
+                        pstmt.executeUpdate();
+                    }
                 }
 
                 conn.commit();
