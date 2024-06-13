@@ -455,7 +455,7 @@ public class OnlineShoppingSystemGUI extends JFrame {
                     balanceLabel.setText("Current Balance: $" + authenticatedUser.getBalance());
                     // Update the balance in the database
                     userManagement.updateUser(authenticatedUser);
-                    userManagement.saveUsersToDB();
+                    authenticatedUser.updateBalance();
                     JOptionPane.showMessageDialog(this, "Funds added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, "Please enter a positive amount.", "Invalid Amount", JOptionPane.ERROR_MESSAGE);

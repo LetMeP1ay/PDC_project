@@ -46,7 +46,7 @@ public class UserManagement {
         }
     }
 
-    // save users to file
+    // save users to the database
     public void saveUsersToDB() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
                 Statement stmt = conn.createStatement()) {

@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Thu Jun 13 12:14:47 NZST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0190-0ef2-6e03-00003db07bb8 
-on database directory C:\Users\bubbltea\Documents\PDC_project\OSS_DB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@7aec35a 
-Loaded from file:/C:/Users/bubbltea/Documents/PDC_project/lib/derby.jar
+Thu Jun 13 14:20:30 NZST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0190-0f65-866f-000006b83bb8 
+on database directory /Users/letmeplay/Developer/PDC_project/OSS_DB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5c29bfd 
+Loaded from file:/Users/letmeplay/Developer/PDC_project/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=11.0.21+9-LTS-193
-user.dir=C:\Users\bubbltea\Documents\PDC_project
-os.name=Windows 11
-os.arch=amd64
-os.version=10.0
+user.dir=/Users/letmeplay/Developer/PDC_project
+os.name=Mac OS X
+os.arch=aarch64
+os.version=14.3.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

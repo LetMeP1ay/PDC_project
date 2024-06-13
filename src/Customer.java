@@ -5,6 +5,7 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,6 +57,17 @@ public class Customer extends User {
         } else {
             System.out.println("Please, enter a value greater than 0.");
         }
+    }
+
+    public void updateBalance() {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+        PreparedStatement stmt = conn.prepareStatement("UPDATE USERS SET USERS_BALANCE = ? WHERE USERS_USERNAME = ?")) {
+            stmt.setDouble(1, this.balance);
+            stmt.setString(2, this.getUsername());
+            stmt.executeUpdate();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        };
     }
 
     // changeBalance method that allows us to manipulate the user's balance later
