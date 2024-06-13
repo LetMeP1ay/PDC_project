@@ -23,7 +23,8 @@ public class Customer extends User {
     private static final String DB_URL = "jdbc:derby:OSS_DB;create=true";
 
     // Constructor for logged-in customer.
-    public Customer(String username, String password, String role, String name, String email, String address, double balance) {
+    public Customer(String username, String password, String role, String name, String email, String address,
+            double balance) {
         super(username, password, role, name, email);
         this.address = address;
         this.balance = balance;
@@ -57,17 +58,21 @@ public class Customer extends User {
         }
     }
 
-    // changeBalance method that allows us to manipulate the user's balance later on.
+    // changeBalance method that allows us to manipulate the user's balance later
+    // on.
     public void changeBalance(double sum) {
         this.balance -= sum;
     }
 
-    // This method allows us to retrieve the user's data by their username and password. It allows us to create the instance of a logged-in customer in the shopping system.
+    // This method allows us to retrieve the user's data by their username and
+    // password. It allows us to create the instance of a logged-in customer in the
+    // shopping system.
     public static Customer retrieveLoggedCustomerData(String username, String password) {
         Customer customer = null;
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
-            String sql = "SELECT * FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '" + password + "'";
+                Statement stmt = conn.createStatement()) {
+            String sql = "SELECT * FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '"
+                    + password + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 customer = new Customer(
@@ -77,8 +82,7 @@ public class Customer extends User {
                         rs.getString("USERS_NAME"),
                         rs.getString("USERS_EMAIL"),
                         rs.getString("USERS_ADDRESS"),
-                        rs.getDouble("USERS_BALANCE")
-                );
+                        rs.getDouble("USERS_BALANCE"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -31,7 +31,7 @@ public class UserManagement {
         customers.add(customer);
     }
 
-    //update user information
+    // update user information
     public void updateUser(Customer customer) {
         for (Customer c : customers) {
             if (c.getUsername().equals(customer.getUsername())) {
@@ -48,8 +48,8 @@ public class UserManagement {
 
     // save users to file
     public void saveUsersToDB() {
-        try ( Connection conn = DriverManager.getConnection(DB_URL);    
-        Statement stmt = conn.createStatement()) {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+                Statement stmt = conn.createStatement()) {
             for (Customer customer : customers) {
                 String sql = "INSERT INTO USERS (USERS_USERNAME, USERS_PASSWORD, USERS_ROLE, USERS_NAME, USERS_EMAIL, USERS_ADDRESS, USERS_BALANCE) VALUES ('"
                         + customer.getUsername() + "', '"
@@ -70,7 +70,7 @@ public class UserManagement {
     public boolean usernameExists(String username) {
         boolean exists = false;
         try (Connection conn = DriverManager.getConnection(DB_URL);
-            Statement stmt = conn.createStatement()) {
+                Statement stmt = conn.createStatement()) {
             String sql = "SELECT COUNT(*) FROM USERS WHERE USERS_USERNAME = '" + username + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next() && rs.getInt(1) > 0) {
@@ -82,7 +82,8 @@ public class UserManagement {
         return exists;
     }
 
-        // This method allows us to validate the user's email by checking the characters in the email against a regular expression.
+    // This method allows us to validate the user's email by checking the characters
+    // in the email against a regular expression.
     public boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -93,8 +94,9 @@ public class UserManagement {
     // show all orders for a specific customer
     public void viewOrders(Customer customer) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM ORDERS WHERE USERS_USERNAME = '" + customer.getUsername()+ "'")) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt
+                        .executeQuery("SELECT * FROM ORDERS WHERE USERS_USERNAME = '" + customer.getUsername() + "'")) {
             while (rs.next()) {
                 System.out.println("Order ID: " + rs.getString("ORDERS_ID"));
                 System.out.println("Customer: " + rs.getString("USERS_USERNAME"));
@@ -111,8 +113,8 @@ public class UserManagement {
     // show all orders
     public void viewAllOrders() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM ORDERS")) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM ORDERS")) {
             while (rs.next()) {
                 System.out.println("Order ID: " + rs.getString("ORDERS_ID"));
                 System.out.println("Customer: " + rs.getString("USERS_USERNAME"));

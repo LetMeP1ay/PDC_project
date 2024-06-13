@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-
 /**
  *
  * @author Bubbltea
@@ -18,7 +17,8 @@ public class Payment {
         this.status = "Pending";
     }
 
-    // process the users payment, checking if there is enough balance available for the transaction
+    // process the users payment, checking if there is enough balance available for
+    // the transaction
     public boolean processPayment(Customer customer) {
         if (customer.getBalance() >= amount) {
             customer.changeBalance(amount);
@@ -37,5 +37,9 @@ public class Payment {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

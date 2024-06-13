@@ -3,9 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Bubbltea
@@ -42,7 +42,8 @@ public class ShoppingCart {
         }
     }
 
-    // get the total price of the products in the cart and apply the discount if there is one to the total
+    // get the total price of the products in the cart and apply the discount if
+    // there is one to the total
     public double calculateTotal() {
         double total = 0;
         for (Product product : products) {

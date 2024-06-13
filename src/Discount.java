@@ -31,7 +31,7 @@ public class Discount {
     public boolean getIsActive() {
         return isActive;
     }
-// Retrieve the status of the current discount based on the isActive variable.
+    // Retrieve the status of the current discount based on the isActive variable.
 
     public String retrieveStatus() {
         if (isActive == true) {
@@ -40,7 +40,7 @@ public class Discount {
             return "Your discount is currently disabled.";
         }
     }
-// Toggle the discount
+    // Toggle the discount
 
     public void changeActive() {
 

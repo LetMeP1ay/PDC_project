@@ -73,12 +73,14 @@ public abstract class User {
         this.password = password;
     }
 
-    // This method allows us to authenticate the user by their username and password.
+    // This method allows us to authenticate the user by their username and
+    // password.
     public static boolean authenticate(String username, String password) {
         boolean success = false;
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
-            String sql = "SELECT COUNT(*) FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '" + password + "'";
+                Statement stmt = conn.createStatement()) {
+            String sql = "SELECT COUNT(*) FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '"
+                    + password + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next() && rs.getInt(1) > 0) {
                 success = true;
@@ -89,13 +91,22 @@ public abstract class User {
         return success;
     }
 
-    // This method allows us to retrieve the user's role by their username and password. 
+    public static Customer confirmAuth(String username, String password) {
+        if (authenticate(username, password)) {
+            return Customer.retrieveLoggedCustomerData(username, password);
+        }
+        return null;
+    }
+
+    // This method allows us to retrieve the user's role by their username and
+    // password.
     // for example, whether they are an admin or a customer.
     public static String getUserRole(String username, String password) {
         String role = "invalid";
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
-            String sql = "SELECT USERS_ROLE FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '" + password + "'";
+                Statement stmt = conn.createStatement()) {
+            String sql = "SELECT USERS_ROLE FROM USERS WHERE USERS_USERNAME = '" + username + "' AND USERS_PASSWORD = '"
+                    + password + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 role = rs.getString(1);
@@ -106,7 +117,8 @@ public abstract class User {
         return role;
     }
 
-    // This method allows us to validate the user's email by checking the characters in the email against a regular expression.
+    // This method allows us to validate the user's email by checking the characters
+    // in the email against a regular expression.
     public boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
